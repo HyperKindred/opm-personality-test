@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuizStore } from '@/stores/quiz'
 import QuestionCard from '@/components/QuestionCard.vue'
@@ -15,13 +15,17 @@ const progressPercent = computed(() => {
 function handleAnswer(optionId: string) {
   quiz.answer(optionId)
 
-  // 如果是最后一题，跳结果页
+  // 最后一题完成后跳转，等待 DOM 更新让选中态渲染
   if (quiz.finished) {
-    setTimeout(() => router.push('/result'), 500)
+    void nextTick(() => router.push('/result'))
   }
 }
 
 function goBack() {
+  if (quiz.answeredCount > 0) {
+    const ok = confirm('确定要返回吗？当前答题进度将不会保存。')
+    if (!ok) return
+  }
   router.push('/')
 }
 </script>

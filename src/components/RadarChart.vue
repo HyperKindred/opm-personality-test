@@ -25,45 +25,29 @@ const option = computed(() => {
     max: 100,
   }))
 
-  const series = [
+  const data: Array<{
+    value: number[]
+    name: string
+    areaStyle: { color: string }
+    lineStyle: { color: string; width: number; type?: 'dashed' }
+    itemStyle: { color: string }
+  }> = [
     {
-      type: 'radar' as const,
-      data: [
-        {
-          value: DIMENSION_IDS.map((id) => props.userScores[id]),
-          name: '你的测评',
-          areaStyle: {
-            color: 'rgba(255, 200, 50, 0.25)',
-          },
-          lineStyle: {
-            color: '#ffc832',
-            width: 2.5,
-          },
-          itemStyle: {
-            color: '#ffc832',
-          },
-        },
-      ],
+      value: DIMENSION_IDS.map((id) => props.userScores[id]),
+      name: '你的测评',
+      areaStyle: { color: 'rgba(255, 200, 50, 0.25)' },
+      lineStyle: { color: '#ffc832', width: 2.5 },
+      itemStyle: { color: '#ffc832' },
     },
   ]
 
-  // 如果有角色对照数据，加上第二层
   if (props.charScores) {
-    const seriesData = series[0] as any
-    seriesData.data.push({
-      value: DIMENSION_IDS.map((id) => (props.charScores as DimensionScores)[id]),
+    data.push({
+      value: DIMENSION_IDS.map((id) => props.charScores![id]),
       name: props.charName ?? '角色',
-      areaStyle: {
-        color: 'rgba(100, 200, 255, 0.2)',
-      },
-      lineStyle: {
-        color: '#64c8ff',
-        width: 2,
-        type: 'dashed' as const,
-      },
-      itemStyle: {
-        color: '#64c8ff',
-      },
+      areaStyle: { color: 'rgba(100, 200, 255, 0.2)' },
+      lineStyle: { color: '#64c8ff', width: 2, type: 'dashed' },
+      itemStyle: { color: '#64c8ff' },
     })
   }
 
@@ -72,7 +56,7 @@ const option = computed(() => {
       trigger: 'item' as const,
     },
     legend: {
-      data: ['你的测评', props.charName ?? '角色'].filter(Boolean),
+      data: ['你的测评', props.charName ?? '角色'].filter((_, i) => i === 0 || props.charScores),
       textStyle: { color: '#ccc' },
       top: 0,
     },
@@ -105,7 +89,12 @@ const option = computed(() => {
         },
       },
     },
-    series,
+    series: [
+      {
+        type: 'radar' as const,
+        data,
+      },
+    ],
   }
 })
 </script>

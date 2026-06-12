@@ -51,7 +51,7 @@ function goHome() {
         </div>
       </section>
 
-      <!-- 右列：角色匹配（更宽） -->
+      <!-- 右列：角色匹配 -->
       <section class="match-section">
         <h2 class="section-title">🎭 你的灵魂角色</h2>
         <CharacterCard :character="result.character" :show-reason="true" />

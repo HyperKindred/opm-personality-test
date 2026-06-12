@@ -1,4 +1,4 @@
-import type { DimensionScores, Question, QuizResult } from '@/types'
+import type { Character, DimensionScores, Question, QuizResult } from '@/types'
 import { CHARACTERS } from '@/data/characters'
 import { DIMENSION_IDS } from '@/data/dimensions'
 
@@ -46,7 +46,7 @@ export function calculateScores(
  */
 export function matchCharacter(
   scores: DimensionScores,
-): { character: (typeof CHARACTERS)[number]; similarity: number } {
+): { character: Character; similarity: number } {
   const scoresArray = DIMENSION_IDS.map((d) => scores[d])
 
   let best = CHARACTERS[0]
@@ -76,9 +76,6 @@ export function getQuizResult(
   return { scores, character }
 }
 
-/**
- * 余弦相似度
- */
 function cosineSimilarity(a: number[], b: number[]): number {
   let dot = 0
   let magA = 0

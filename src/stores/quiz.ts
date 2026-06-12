@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { QUESTIONS } from '@/data/questions'
 import type { Question } from '@/types'
-import { calculateScores, matchCharacter } from '@/engine/calculator'
+import { calculateScores, getQuizResult } from '@/engine/calculator'
 import type { DimensionScores, QuizResult } from '@/types'
 
 /** 每次测试抽取的题目数 */
@@ -41,13 +41,6 @@ export const useQuizStore = defineStore('quiz', () => {
     return calculateScores(selectedQuestions.value, answers.value)
   })
 
-  /** 实时匹配角色 */
-  const liveCharacter = computed(() => {
-    const s = liveScores.value
-    if (!s) return null
-    return matchCharacter(s)
-  })
-
   /* ========== 操作 ========== */
   /** 启动新测试 — 洗牌抽题 */
   function initQuiz() {
@@ -80,9 +73,7 @@ export const useQuizStore = defineStore('quiz', () => {
   }
 
   function finish() {
-    const scores = calculateScores(selectedQuestions.value, answers.value)
-    const { character } = matchCharacter(scores)
-    result.value = { scores, character }
+    result.value = getQuizResult(selectedQuestions.value, answers.value)
     finished.value = true
   }
 
@@ -108,7 +99,6 @@ export const useQuizStore = defineStore('quiz', () => {
     hasAnsweredCurrent,
     answeredCount,
     liveScores,
-    liveCharacter,
     // actions
     initQuiz,
     answer,

@@ -56,5 +56,4 @@ export type DimensionScores = Record<DimensionId, number>
 export interface QuizResult {
   scores: DimensionScores
   character: Character
-  secondaryCharacter?: Character
 }

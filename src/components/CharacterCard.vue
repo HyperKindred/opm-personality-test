@@ -1,13 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import type { Character } from '@/types'
 
-defineProps<{
+const props = defineProps<{
   character: Character
   showReason?: boolean
 }>()
 
 const imgError = ref(false)
+
+/** 自动拼接 base path，适配 GitHub Pages 子路径部署 */
+const avatarSrc = computed(() => {
+  const raw = props.character.avatar
+  if (raw.startsWith('/')) {
+    return import.meta.env.BASE_URL + raw.slice(1)
+  }
+  return raw
+})
 </script>
 
 <template>
@@ -16,7 +25,7 @@ const imgError = ref(false)
     <div class="char-avatar">
       <img
         v-if="!imgError"
-        :src="character.avatar"
+        :src="avatarSrc"
         :alt="character.name"
         class="char-img"
         @error="imgError = true"

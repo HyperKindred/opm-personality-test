@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuizStore } from '@/stores/quiz'
 
 const router = useRouter()
 const quiz = useQuizStore()
+
+const avatarSrc = computed(() => import.meta.env.BASE_URL + 'avatars/one_punch_man.png')
 
 function startQuiz() {
   quiz.initQuiz()
@@ -15,7 +18,7 @@ function startQuiz() {
   <div class="home">
     <div class="hero">
       <div class="hero-logo">
-        <img src="/avatars/one_punch_man.png" alt="一拳超人" class="hero-img" />
+        <img :src="avatarSrc" alt="一拳超人" class="hero-img" />
       </div>
       <h1 class="hero-title">一拳超人·人格测试</h1>
       <p class="hero-subtitle">
